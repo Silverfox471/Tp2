@@ -1,24 +1,49 @@
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.opera.OperaDriver;
 
-public class seleniumtest {
+import java.util.concurrent.TimeUnit;
+
+public class SeleniumTest {
 
     WebDriver driver;
 
     @Before
     public void setup()
     {
-        driver = new FirefoxDriver();
-        long time;
-        driver.manage().timeouts().implicitlyWait(time 10,
-        )
-        driver.get ("https://www.google.com")
+        String browser = System.getProperty("browser");
+
+        if(browser == null)
+        {
+            driver = new ChromeDriver();
+        }
+        else if(browser.equals("chrome"))
+        {
+            driver = new ChromeDriver();
+        }
+        else if(browser.equals("firefox"))
+        {
+            driver = new FirefoxDriver();
+        }
+        else if(browser.equals("opera"))
+        {
+            driver = new OperaDriver();
+        }
+        else
+        {
+            driver = new ChromeDriver();
+        }
+
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        driver.get("https://www.google.com");
     }
 
     @After
@@ -27,45 +52,29 @@ public class seleniumtest {
         driver.quit();
     }
 
-
     @Test
-    public void test1() throws InterruptedException {
+    public void testEnter() throws InterruptedException {
+        String expected = "French language - Wikipedia";
+
         WebElement barreRecherche = driver.findElement(By.id("lst-ib"));
-        ((WebElement) barreRecherche).sendKeys("canelé");
+        barreRecherche.sendKeys("french");
+        barreRecherche.sendKeys(Keys.ENTER);
 
-        WebElement buttonRecherche = driver.findElement(By.className("lsb"));
-        buttonRecherche.click();
-
-        Thread.sleep(1000);
+        WebElement premierResultat = driver.findElement(By.cssSelector(".rc > .r > a"));
+        Assert.assertEquals(expected, premierResultat.getText());
     }
-
 
     @Test
     public void testClick() throws InterruptedException {
         String expected = "French language - Wikipedia";
 
         WebElement barreRecherche = driver.findElement(By.id("lst-ib"));
-        barreRecherche.sendKeys(..keysToSend: ("french);
+        barreRecherche.sendKeys("french");
 
         WebElement buttonRecherche = driver.findElement(By.className("lsb"));
+        buttonRecherche.click();
 
-        WebElement premierResultat = driver.findElement(By.xpath())
-
-
-        WebDriver driver = new ChromeDriver();
-        driver.get ("https://www.google.com");
-
-        WebElement barreRecherche = driver.findElement(By.id("lst-ib"));
-        ((WebElement) barreRecherche).sendKeys("canelé");
-        barreRecherche.sendKeys(Keys.ENTER);
-
-        WebElement buttonRecherche = driver.findElement(By.name())
-
-        barreRecherche.sendKeys(Keys.ENTER);
-
-
-        Thread.sleep(1000);
+        WebElement premierResultat = driver.findElement(By.cssSelector(".rc > .r > a"));
+        Assert.assertEquals(expected, premierResultat.getText());
     }
-
-
 }
